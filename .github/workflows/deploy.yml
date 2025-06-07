@@ -1,0 +1,33 @@
+name: deploy react js
+
+on:
+    push:
+        branches: [main]
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: SSH into EC2 & Deploy
+              uses: appleboy/ssh-action@v0.1.6
+
+              with:
+                  host: 43.204.219.136
+                  username: ubuntu
+                  port: 22
+                  key: ${{ secrets.EC2_SSH_KEY }}
+                  script: |
+
+                      # Frontend
+                      cd /home/ubuntu/frontend
+                      git pull origin main
+
+                      sudo docker stop frontend || true
+                      sudo docker rm frontend || true
+
+                      sudo docker build -t frontend:latest .
+                      sudo docker run -d --name frontend -p 80:5173 frontend:latest
