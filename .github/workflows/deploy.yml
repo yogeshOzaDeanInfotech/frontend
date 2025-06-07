@@ -30,4 +30,4 @@ jobs:
                       sudo docker rm frontend || true
 
                       sudo docker build -t frontend:latest .
-                      sudo docker run -d --name frontend -p 80:5173 frontend:latest
+                      sudo docker run -d --name frontend -p 80:80 frontend:latest
